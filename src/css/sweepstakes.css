@@ -1,0 +1,130 @@
+/* 抽奖活动页面 */
+.sweepstakes {
+    position: fixed;
+    z-index: 999;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    /* opacity: 0.5; */
+    background: rgba(0,0,0,0.5);
+    text-align: center;
+}
+.sweepstakes-wrap {
+    width: 100%;
+    height: 100%;
+}
+.sweepstakes .bg-img {
+    margin: 1.315rem auto 0;
+    position: relative;
+    background: url(../imgs/抽奖/背景1.png) no-repeat center center;
+    background-size: 100% 100%;
+    width: 3.02rem;
+    height: 3.377rem;
+}
+.bg-img > h2 {
+    /* border: 1px solid red; */
+    width: 1.442rem;
+    height: 0.391rem;
+    line-height: 0.391rem;
+    position: absolute;
+    color: white;
+    left: 50%;
+    top: 0.1rem;
+    font-size: 0.2rem;
+    transform: translate(-50%);
+}
+.bg-img .lottery-box {
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+    top: 0;
+    position: absolute;
+    padding: 0.8rem 0.17rem 0.33rem;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-around;
+    align-content: space-around;
+}
+.lottery-box > .lottery-item {
+    background-image: url('../imgs/抽奖/抽奖格子1.png');
+    background-position: center center;
+    background-repeat: no-repeat no-repeat;
+    background-size: 100% 100%;
+    width: 0.88rem;
+    height: 0.73rem;
+    box-sizing: border-box;
+}
+.lottery-box > .lottery-item.active {
+    border: 0.03rem solid #FFE100;
+    border-radius: 0.11rem;
+}
+.lottery-box > .lottery-item > img {
+    margin: 0.04rem 0;
+    width: 60%;
+}
+.lottery-box > .lottery-item > p {
+    /* padding-top: 0.04rem; */
+    font-size: 0.14rem;
+}
+.lottery-box > .lottery-item:nth-child(2n) {
+    background-image: url('../imgs/抽奖/抽奖格子2.png');
+}
+.lottery-box > .lottery-item.lottery-btn {
+    background-image: url(../imgs/抽奖/抽奖按钮.png);
+}
+
+
+.sweepstakes .close-btn {
+    margin-top: 0.53rem;
+    width: 0.44rem;
+    height: 0.45rem;
+}
+
+
+/* 领奖 */
+.receive-reward {
+    width: 2.97rem;
+    height: 2.81rem;
+    margin: 1.491rem auto;
+    background-color: white;
+    border-radius: 0.09rem;
+    overflow: hidden;
+}
+.receive-reward-bg {
+    width: 100%;
+    height: 0.955rem;
+    background: url(../imgs/抽奖/成功背景.png) no-repeat center top;
+    background-size: 100% 100%;
+}
+.receive-reward > p {
+    text-align: center;
+    margin: auto;
+}
+.receive-reward > .p1 {
+    font-size: 0.2rem;
+    width: 1.4rem;
+    height: 0.28rem;
+    color: #2B2B2B;
+    margin-top: 0.164rem;
+}
+.receive-reward > .p2 {
+    margin-top: 0.02rem;
+    font-size: 0.15rem;
+    color: #373737;
+    width: 1.06rem;
+    height: 0.53rem;
+}
+.receive-reward > .p2 > span {
+    color: #FFCD00;
+    font-size: 0.24rem;
+}
+.receive-reward .ok {
+    margin: 0.25rem auto;
+    width: 1.9rem;
+    height: 0.36rem;
+    background: #1F92FF;
+    border-radius: 0.04rem;
+    line-height: 0.36rem;
+    color: white;
+    font-size: 0.15rem;
+}

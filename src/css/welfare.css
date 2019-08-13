@@ -1,0 +1,296 @@
+/* 福利中心主页面 */
+#welfare header {
+    width: 100%;
+    height: 0.48rem;
+    position: relative;
+    box-shadow: 0 2px 3px 0 rgba(213,213,213,0.27);
+}
+#welfare header img {
+    width: 0.24rem;
+    height: 0.24rem;
+    position: absolute;
+    left: 0.09rem;
+    top: 0.12rem;
+}
+#welfare header h1{
+    text-align: center;
+    font-size: 0.17rem;
+    line-height: 0.48rem;
+    font-family: PingFangSC-Medium;
+}
+#welfare section {
+    padding-bottom: 0.8rem;
+    box-sizing: border-box;
+}
+.check-day {
+    padding: 0.18rem 0.18rem 0 0.18rem;
+    
+}
+.days{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.12rem;
+}
+.days-continue h2{
+    font-size: 0.15rem;
+    color: #19191B;
+}
+.days-continue p {
+    font-size: 0.12rem;
+    color: #C8C8C8;
+}
+.days-continue .get-day {
+    color: red;
+}
+.days-button {
+    width: 0.64rem;
+    height: 0.28rem;
+    background: #D6D6D6;
+    border-radius: 1rem;
+    text-align: center;
+}
+.days-button span {
+    color: #ffffff;
+    font-size: 0.13rem;
+    line-height: 0.28rem;
+}
+.days-cal ul {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 0.12rem;
+    border-bottom: 1px solid #EFEFF0;
+}
+.cal-item {
+    width: 0.42rem;
+    /* height: 0.42rem; */
+    box-sizing: border-box;
+    text-align: center;
+    /* border: 1px solid black; */
+}
+.cal-item .arc{
+    height: 0.42rem;
+    background: #EFEFF0;
+    border-radius: 50%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: center;
+}
+.cal-item .arc span {
+    color: #19191B;
+    width: 100%;
+    display: block;
+    height: 0.17rem;
+    font-size: 0.15rem;
+}
+.cal-item .arc img {
+    display: block;
+    width: 0.18rem;
+    height: 0.18rem;
+}
+.cal-item > p{
+    color: #82848B;
+    font-size: 0.1rem;
+}
+.task {
+    /* border: 1px solid red; */
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding: 0 0.18rem;
+}
+.task > div {
+    width: 1.6rem;
+    height: 0.83rem;
+    margin: 0.12rem 0 0.06rem;
+    box-sizing: border-box;
+    padding: 0.24rem 0.195rem;
+    box-shadow: 0 2px 5px 0 rgba(213,213,213,0.27);
+}
+.task .my-task {
+    background: url('../imgs/我的任务.png') no-repeat center center;
+    background-size: 100% 100%;
+}
+.task > div h2 {
+    color: #19191B;
+    font-size: 0.15rem;
+    font-weight: 700;
+    margin-bottom: 0.03rem;
+}
+.task > div p {
+    box-sizing: border-box;
+    color: #FEE434;
+    width: 0.95rem;
+    height: 0.22rem;
+    font-size: 0.12rem;
+    background: #19191B;
+    border-radius: 0.11rem;
+    line-height: 0.22rem;
+    padding-left: 0.055rem;
+}
+.task .lottery {
+    width: 1.57rem;
+    height: 0.79rem;
+    background: url('../imgs/鱼蛋兑换.png') no-repeat center center;
+    background-size: 100% 100%;
+}
+.task .lottery p {
+    padding: 0;
+    width: 0.66rem;
+    color: #81CDFF;
+    text-align: center;
+}
+.receive-price ul {
+    display: flex;
+    flex-flow: column wrap;
+}
+.price-item {
+    height: 0.66rem;
+    box-sizing: border-box;
+    /* border: 1px solid black; */
+    padding: 0.12rem 0.221rem;
+    display: flex;
+    justify-content: space-between;
+}
+.price-title {
+    display: flex;
+    align-items: center;
+}
+.price-title > img {
+    width: 0.42rem;
+    height: 0.42rem;
+    margin-right: 0.109rem;
+}
+.price-title .price-des {
+    display: flex;
+    height: 0.38rem;
+    flex-wrap: wrap;
+    align-content: space-between; 
+}
+.price-title .price-des h2 {
+    font-size: 14px;
+    width: 100%;
+    color: #19191B;
+}
+.price-title .price-des p {
+    font-size: 12px;
+    color: #82848B;
+}
+
+.price-item .to-see {
+    width: 0.64rem;
+    height: 0.28rem;
+    background: rgba(60,157,251,0.10);
+    border-radius: 100px;
+    color: #3C9DFB;
+    font-size: 0.12rem;
+    text-align: center;
+    line-height: 0.28rem;
+    font-family: PingFangSC-Medium;
+}
+
+#welfare section .see-ad {
+    margin: 0 auto;
+    width: 3.2rem;
+    height: 3rem;
+    box-shadow: 0 1px 4px 0 rgba(0,0,0,0.10);
+    border-radius: 0.08rem;
+    overflow: hidden;
+}
+.see-ad > h1 {
+    height: 0.14rem;
+    margin: 0.15rem 0 0.096rem; 
+    text-align: center;
+    font-family: PingFangSC-Medium;
+    font-size: 0.16rem;
+    color: #19191B;
+}
+.see-ad > p {
+    text-align: center;
+    font-size: 0.13rem;
+    color: #E2BD74;
+}
+.see-ad .task-line {
+    margin: 0.3rem auto;
+    width: 2.8rem;
+    height: 0.04rem;
+    background: #EFEFF0;
+    border-radius: 100px;
+    position: relative;
+}
+.task-line > ul {
+    position: absolute;
+    width: 100%;
+    height: 0.04rem;
+    display: flex;
+    justify-content: space-between;
+}
+.task-line .receive-lines {
+    flex: 1;
+}
+.task-line .receive-dots {
+    position: relative;
+    top: -0.04rem;
+    width: 0.12rem;
+    height: 0.12rem;
+    background: #EFEFF0;;
+    border-radius: 50%;
+}
+.task-line .complete {
+    background: #E2BD74;
+}
+.task-line .receive-dots.money {
+    z-index: 100;
+    width: 0.282rem;
+    /* position: absolute; */
+    color: white;
+    font-size: 0.08rem;
+    text-align: center;
+    border: 0.02rem solid #FFCD00;
+    top: -0.141rem;
+    height: 0.282rem;
+    background: #FFA313;
+}
+.task-line .receive-dots.money .reward-amount {
+    font-size: 0.14rem;
+    height: 0.14rem;
+}
+.reward-btn {
+    padding: 0 0.18rem;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+.reward-btn p{
+    font-size: 0.12rem;
+    line-height: 0.26rem;
+    color: #82848B;
+    float: left;
+}
+.reward-btn .receive{
+    float: right;
+    width: 0.75rem;
+    height: 0.26rem;
+    background: #FFA313;
+    border-radius: 100px;
+    text-align: center;
+    line-height: 0.26rem;
+    font-size: 0.12rem;
+    color: #FFFFFF;
+}
+#welfare section .rules {
+    margin: 0.34rem auto 0;
+    width: 2.85rem;
+    height: 1rem;
+    background: #F5F5F7;
+    border-radius: 0.04rem;
+    box-sizing: border-box;
+    padding: 0.034rem 0.135rem;
+}
+#welfare section .rules p {
+    font-size: 0.1rem;
+    line-height: 0.18rem;
+    color: #82848B;
+}
+
+
