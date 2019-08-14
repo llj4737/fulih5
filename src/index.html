@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="../css/welfare.css">
     <link rel="stylesheet" href="../css/sweepstakes.css"> -->
     <link rel="stylesheet" href="../css/build.min.css">
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_1351016_paax284o9go.css">
     <script src="https://cdn.bootcss.com/zepto/1.1.2/zepto.js"></script>
     <script src="../js/build.js"></script>
     <script>calcRem(360)</script>
@@ -71,7 +72,7 @@
                         <p>即可获取鱼蛋</p>
                     </div>
                     <div class="days-button">
-                        <span>已签到</span>
+                        签到
                     </div>
                 </div>
                 <div class="days-cal">
@@ -81,49 +82,49 @@
                                 <span>+8</span>
                                 <img src="./imgs/鱼蛋.png" alt="">
                             </div>
-                            <p>周二</p>
+                            <p><i class="iconfont icon-ok1"></i>周一</p>
                         </li>
                         <li class="cal-item">
                             <div class="arc">
                                 <span>+8</span>
                                 <img src="./imgs/鱼蛋.png" alt="">
                             </div>
-                            <p>周二</p>
+                            <p><i class="iconfont icon-ok1"></i>周二</p>
                         </li>
                         <li class="cal-item">
                             <div class="arc">
                                 <span>+8</span>
                                 <img src="./imgs/鱼蛋.png" alt="">
                             </div>
-                            <p>周二</p>
+                            <p><i class="iconfont icon-ok1"></i>周三</p>
                         </li>
                         <li class="cal-item">
                             <div class="arc">
                                 <span>+8</span>
                                 <img src="./imgs/鱼蛋.png" alt="">
                             </div>
-                            <p>周二</p>
+                            <p><i class="iconfont icon-ok1"></i>周四</p>
                         </li>
                         <li class="cal-item">
                             <div class="arc">
                                 <span>+8</span>
                                 <img src="./imgs/鱼蛋.png" alt="">
                             </div>
-                            <p>周二</p>
+                            <p><i class="iconfont icon-ok1"></i>周五</p>
                         </li>
                         <li class="cal-item">
                             <div class="arc">
                                 <span>+8</span>
                                 <img src="./imgs/鱼蛋.png" alt="">
                             </div>
-                            <p>周二</p>
+                            <p><i class="iconfont icon-ok1"></i>周六</p>
                         </li>
                         <li class="cal-item">
                             <div class="arc">
                                 <span>+8</span>
                                 <img src="./imgs/鱼蛋.png" alt="">
                             </div>
-                            <p>周二</p>
+                            <p><i class="iconfont icon-ok1"></i>周日</p>
                         </li>
                     </ul>
                 </div>
@@ -150,7 +151,7 @@
                                 <p>可领20金券</p>
                             </div>
                         </div>
-                        <div class="to-see">
+                        <div class="to-see" data-id="1">
                             去看看
                         </div>
                     </li>
@@ -158,11 +159,11 @@
                         <div class="price-title">
                             <img src="./imgs/免费专区复制.png" alt="">
                             <div class="price-des">
-                                <h2>更新版本领奖</h2>
-                                <p>可领20金券</p>
+                                <h2>每月福利10元礼包等你拿</h2>
+                                <p>还有N天N小时N分领取</p>
                             </div>
                         </div>
-                        <div class="to-see">
+                        <div class="to-see" data-id="1">
                             去看看
                         </div>
                     </li>
@@ -170,35 +171,35 @@
                         <div class="price-title">
                             <img src="./imgs/免费专区.png" alt="">
                             <div class="price-des">
-                                <h2>更新版本领奖</h2>
-                                <p>可领20金券</p>
+                                <h2>今日免费专区</h2>
+                                <p>买30得60, 双倍返还!</p>
                             </div>
                         </div>
-                        <div class="to-see">
+                        <div class="to-see" data-id="1">
                             去看看
                         </div>
                     </li>
                     <li class="price-item">
                         <div class="price-title">
-                            <img src="./imgs/更新.png" alt="">
+                            <img src="./imgs/阅读计划.png" alt="">
                             <div class="price-des">
-                                <h2>更新版本领奖</h2>
-                                <p>可领20金券</p>
+                                <h2>阅读计划</h2>
+                                <p>看这里@好看的免费书等你挑~</p>
                             </div>
                         </div>
-                        <div class="to-see">
+                        <div class="to-see" data-id="1">
                             去看看
                         </div>
                     </li>
                     <li class="price-item">
                         <div class="price-title">
-                            <img src="./imgs/更新.png" alt="">
+                            <img src="./imgs/广告.png" alt="">
                             <div class="price-des">
-                                <h2>更新版本领奖</h2>
-                                <p>可领20金券</p>
+                                <h2>看广告拿好礼</h2>
+                                <p>本次奖励100金券100经验</p>
                             </div>
                         </div>
-                        <div class="to-see">
+                        <div class="to-see" data-id="1">
                             去看看
                         </div>
                     </li>
@@ -255,16 +256,37 @@
                     <div class="lottery-box">
                         <div class="lottery-item active">
                             <img src="./imgs/抽奖/金券图标.png" alt="">
-                            <p>100金券</p>
+                            <p><span>50</span>金券</p>
                         </div>
-                        <div class="lottery-item"></div>
-                        <div class="lottery-item"></div>
-                        <div class="lottery-item"></div>
+                        <div class="lottery-item">
+                            <img src="./imgs/抽奖/金券图标.png" alt="">
+                            <p><span>50</span>金券</p>
+                        </div>
+                        <div class="lottery-item">
+                            <img src="./imgs/抽奖/金券图标.png" alt="">
+                            <p><span>50</span>金券</p>
+                        </div>
+                        <div class="lottery-item">
+                            <img src="./imgs/抽奖/金券图标.png" alt="">
+                            <p><span>50</span>金券</p>
+                        </div>
                         <div class="lottery-item lottery-btn"></div>
-                        <div class="lottery-item"></div>
-                        <div class="lottery-item"></div>
-                        <div class="lottery-item"></div>
-                        <div class="lottery-item"></div>
+                        <div class="lottery-item">
+                            <img src="./imgs/抽奖/金券图标.png" alt="">
+                            <p><span>50</span>金券</p>
+                        </div>
+                        <div class="lottery-item">
+                            <img src="./imgs/抽奖/金券图标.png" alt="">
+                            <p><span>50</span>金券</p>
+                        </div>
+                        <div class="lottery-item">
+                            <img src="./imgs/抽奖/金券图标.png" alt="">
+                            <p><span>50</span>金券</p>
+                        </div>
+                        <div class="lottery-item">
+                            <img src="./imgs/抽奖/金券图标.png" alt="">
+                            <p><span>50</span>金券</p>
+                        </div>
                     </div>
                 </div>
                 <img class="close-btn" src="./imgs/抽奖/global_close_normal1.png" alt="">
@@ -273,7 +295,7 @@
             <div class="receive-reward" style="display: block">
                 <div class="receive-reward-bg"></div>
                 <p class="p1">恭喜你, 中奖了</p>
-                <p class="p2">获得<span>50</span>金券</p>
+                <p class="p2">获得<span>100</span>金券</p>
                 <div class="ok">确定</div>
             </div>
         </div>

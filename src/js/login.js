@@ -32,6 +32,9 @@ function getCurUser () {
  * 入口函数
  */
 $(function(){
+    if (is_login()) {
+        return checkInSuccess();
+    }
     let log_options = {type: 'post', url: '/api/user/login'};
     login_deal($('.login'), log_options, login)
     let reg_options = {type: 'post', url: '/api/user/register'};
@@ -39,17 +42,25 @@ $(function(){
     table_show();
     checkIn();
 });
+
 /**
  * 签到按钮
  */
 function checkIn () {
     $('.checkIn').on('click', e => {
-        let isLogin = Object.keys(userData).length === 0 ? false : true;
+        let isLogin = is_login();
         if (!isLogin) return alert('当前用户还未登录, 请登录');
         // 签到成功
-        $('#home').css('display', 'none');
-        $('#welfare').css('display', 'block');
+        checkInSuccess();
     })
+}
+function is_login () {
+    return Object.keys(userData).length === 0 ? false : true;
+}
+function checkInSuccess() {
+    $('#home').css('display', 'none');
+    $('#welfare').css('display', 'block');
+    to_welfare(); // 进入福利中心
 }
 /**
  * 

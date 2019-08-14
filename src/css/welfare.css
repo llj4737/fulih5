@@ -46,14 +46,15 @@
 .days-button {
     width: 0.64rem;
     height: 0.28rem;
-    background: #D6D6D6;
+    background: #FFA313;
     border-radius: 1rem;
     text-align: center;
-}
-.days-button span {
     color: #ffffff;
     font-size: 0.13rem;
     line-height: 0.28rem;
+}
+.days-button.complete_checkIn{
+    background: #D6D6D6;
 }
 .days-cal ul {
     display: flex;
@@ -92,6 +93,12 @@
 .cal-item > p{
     color: #82848B;
     font-size: 0.1rem;
+}
+.cal-item > p > i {
+    color: #3C9DFB;
+    font-size: 0.12rem;
+    height: 0.051rem;
+    display: none;
 }
 .task {
     /* border: 1px solid red; */
@@ -152,9 +159,11 @@
     padding: 0.12rem 0.221rem;
     display: flex;
     justify-content: space-between;
+    align-items: center;
 }
 .price-title {
     display: flex;
+    width: 80%;
     align-items: center;
 }
 .price-title > img {
@@ -188,6 +197,14 @@
     text-align: center;
     line-height: 0.28rem;
     font-family: PingFangSC-Medium;
+}
+.price-item .to-see.receive{
+    background: #ffa313;
+    color: white;
+}
+.price-item .to-see.complete{
+    background: #d6d6d6;
+    color: white;
 }
 
 #welfare section .see-ad {
