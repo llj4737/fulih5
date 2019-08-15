@@ -11,6 +11,7 @@ let ajax = (options, cb) => {
             cb.call(null, result);
         },
         error (err) {
+            console.log(err)
             if (err) {
                 alert('登录失败')
                 clear();
@@ -93,7 +94,7 @@ function table_show () {
 function login(res) {
     // console.log(res)
     if (res.status === 200) {
-        alert(res.message);
+        // alert(res.message);
         let username = $('.username input').val();
         let password = $('.password input').val();
         let data = {username, password};

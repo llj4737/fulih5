@@ -257,6 +257,10 @@
 .task-line .complete {
     background: #E2BD74;
 }
+.task-line .complete.money{
+    background: #FFA313;
+    border: 0.02rem solid #FFCD00;
+}
 .task-line .receive-dots.money {
     z-index: 100;
     width: 0.282rem;
@@ -264,10 +268,10 @@
     color: white;
     font-size: 0.08rem;
     text-align: center;
-    border: 0.02rem solid #FFCD00;
+    
     top: -0.141rem;
     height: 0.282rem;
-    background: #FFA313;
+    
 }
 .task-line .receive-dots.money .reward-amount {
     font-size: 0.14rem;
@@ -288,12 +292,16 @@
     float: right;
     width: 0.75rem;
     height: 0.26rem;
-    background: #FFA313;
+    
+    background: #d6d6d6;
     border-radius: 100px;
     text-align: center;
     line-height: 0.26rem;
     font-size: 0.12rem;
     color: #FFFFFF;
+}
+.reward-btn .receive.active {
+    background: #FFA313;
 }
 #welfare section .rules {
     margin: 0.34rem auto 0;
