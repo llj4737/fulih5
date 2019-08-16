@@ -12,7 +12,7 @@ function to_welfare() {
 }
 function okSignTask() { // 签到成功, 抽奖页面
     $('.sweepstakes').show();
-    $('.sweepstakes-wrap').show();
+    
     getLotteryInfo();
     lottery_btn();
 }
@@ -136,6 +136,7 @@ function getLotteryInfo() {   // 获取抽奖信息
                 }
                 let gift = result.gift;
                 console.log(gifts)
+                $('.sweepstakes-wrap').show();
                 render_lotteryTray(gift);
             }
         }
@@ -188,9 +189,14 @@ function getClickCount() {
 }
 function deal_adTask(ad_task) {
     let task = ad_task;
+    // let status1 = ad_task.reduce((prev, cur) => cur['status'] == 1 ? ++prev : prev, 0);
+    // if (status1 == 0) {
+    //     $('.to-see.ad_task').text('已完成').addClass('complete');
+    //     return;
+    // }
     let clickCount = 0;
     $('.to-see.ad_task').click(function () {
-        let $that = $(this);
+        
         if ((clickCount = getClickCount()) > 6) return;
         setClickCount((+clickCount) + 1);
         ad_process(clickCount);  // 显示完成的进度条
@@ -207,9 +213,9 @@ function deal_adTask(ad_task) {
                 success(res) {
                     // console.log(res);
                     if (res.status == 200) {
-                        if (clickCount == 6) {
-                            $that.text('已完成').addClass('complete');
-                        }
+                        // if (clickCount == 6 || clickCount == 3) {
+                        //     $that.text('已完成').addClass('complete');
+                        // }
                         ad_task = ad_task.map(v => {
                             (v.condition.taskNum == clickCount) && (v.status = "2");
                             return v;
@@ -235,16 +241,32 @@ function deal_process() {
     if (count == 6 || getClickCount() - 1 == 6) {
         $('.to-see.ad_task').text('已完成').addClass('complete');
     }
-    if (status3 == 2) return $('.reward-btn .receive').removeClass('active').text('已领取');
+    if (status3 == 2) {
+        $('.reward-btn .receive').removeClass('active').text('已领取');
+        
+    }
+    let status1 = ad_task.reduce((prev, cur) => cur['status'] == 1 ? ++prev : prev, 0);
+    if (status1 == 0) {
+        $('.to-see.ad_task').text('已完成').addClass('complete');
+        $('.to-see.ad_task').unbind('click')
+    }
+    // if (status1 == 0) {
+    //     $('.to-see.ad_task').text('已完成').addClass('complete');
+    //     $('.to-see.ad_task').unbind('click')
+    // }
     
     let clickCount = getClickCount() - 1;
     if (clickCount < count) {
         setClickCount(count + 1);
     }
-    
+    if (times >= 1) {
+        $('.reward-btn .receive').addClass('active');
+        reward_btn(ad_task);
+    }
     ad_process(getClickCount() - 1)
 }
 function ad_process(times) { //进度
+    if (times < 0) return; 
     let $dots = $('.task-line .receive-dots').slice(1);
     let $lines = $('.task-line .receive-lines');
     for (let i = 0; i < $dots.length; i++) {
@@ -257,22 +279,37 @@ function ad_process(times) { //进度
         }
 
     }
-    if (times >= 3) {
-        $('.reward-btn .receive').addClass('active');
-        reward_btn(ad_task);
-    }
+    // if (times >= 3) {
+    //     $('.reward-btn .receive').addClass('active');
+    //     reward_btn(ad_task);
+    // }
 }
 function reward_btn(ad_task) { // 领奖按钮
     let count = ad_task.reduce((prev, cur) => cur.status == 2 ? ++prev : prev, 0);
+    let count1 = ad_task.reduce((prev, cur) => cur.status == 1 ? ++prev : prev, 0);
     console.log(ad_task, count)
+    console.log('count1', count1)
     // if (count == 0) {
     //     $('.reward-btn .receive').removeClass('active');
     //     ad_process(0)
     //     return;
     // }
+    if (count > 0) {
+        $('.reward-btn .receive').addClass('active');
+    }
+    if (count1 == 0) {
+        console.log(11111111111111111111111111)
+        $('.to-see.ad_task').text('已完成').addClass('complete');
+        $('.to-see.ad_task').unbind('click')
+    }
+    // if (count3 == 2) {
+    //     $('.to-see.ad_task').text('已完成').addClass('complete');
+    //     $('.to-see.ad_task').unbind('click')
+    // }
     $('.reward-btn .receive').click(function () {
-
+        ad_task = ad_task.filter(v => v.status == 2);
         if (--count < 0) return;
+        
         let cur = ad_task[count];
         let { taskId } = cur;
         console.log(taskId)
@@ -287,12 +324,15 @@ function reward_btn(ad_task) { // 领奖按钮
 
                 if (res.status == 200) {
                     console.log(111)
+                    setClickCount(getClickCount() - 3);
                     if (count == 0) {
                         $('.reward-btn .receive').removeClass('active').text('已领取');
-                        ad_process(0)
                     }
+                    ad_process(count * 3)
                     setWillReceiveCountDesc();
                     cur.status = '3';
+                    let count3 = ad_task.reduce((prev, cur) => cur.status == 3 ? ++prev : prev, 0);
+                    console.log(ad_task, 'ad_task')
                 }
             }
         })
