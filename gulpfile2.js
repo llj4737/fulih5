@@ -7,25 +7,21 @@ var cssClean = require('gulp-clean-css');
 var htmlMin = require('gulp-htmlmin');
 var livereload = require('gulp-livereload')
 var connect = require('gulp-connect');
-var presetEnv = require('@babel/preset-env')
 var proxy = require('http-proxy-middleware')
 var browserify = require('browserify'),  // 插件，实际是node系
     // 转成stream流，gulp系
     stream = require('vinyl-source-stream'),
     // 转成二进制流，gulp系
     buffer = require('vinyl-buffer');
-gulp.task('browserifyLogin', function () {
+gulp.task('browserify', function () {
     // 定义入口文件
     return browserify({
         // 入口必须是转换过的es6文件，且文件不能是es6经过转换的es5文件，否者会报错
-        entries: 'src/js/login.js',
+        entries: 'dist/js/login.js',
         debug: true
     })
     // 在bundle之前先转换es6，因为readabel stream 流没有transform方法
     // .transform("babelify", {presets: ['es2015']})
-    .transform('babelify', {
-        presets: ['@babel/preset-env'] //转换es6代码
-    })
     // 转成stream流（stream流分小片段传输）
     .bundle()
     .on('error', function (error) {
@@ -33,33 +29,6 @@ gulp.task('browserifyLogin', function () {
     })
     // node系只有content，添加名字转成gulp系可操作的流
     .pipe(stream('index.js'))
-    // 转成二进制的流（二进制方式整体传输）
-    .pipe(buffer())
-    // 输出
-    .pipe(gulp.dest('dist/js/'))
-    .pipe(livereload())
-    .pipe(connect.reload())
-})
-
-gulp.task('browserifyWelfare', function () {
-    // 定义入口文件
-    return browserify({
-        // 入口必须是转换过的es6文件，且文件不能是es6经过转换的es5文件，否者会报错
-        entries: 'src/js/welfare.js',
-        debug: true
-    })
-    // 在bundle之前先转换es6，因为readabel stream 流没有transform方法
-    // .transform("babelify", {presets: ['es2015']})
-    .transform('babelify', {
-        presets: ['@babel/preset-env'] //转换es6代码
-    })
-    // 转成stream流（stream流分小片段传输）
-    .bundle()
-    .on('error', function (error) {
-        console.log(error.toString())
-    })
-    // node系只有content，添加名字转成gulp系可操作的流
-    .pipe(stream('index2.js'))
     // 转成二进制的流（二进制方式整体传输）
     .pipe(buffer())
     // 输出
@@ -98,11 +67,11 @@ gulp.task('img', function () {
 gulp.task('js', function () {
     return gulp.src('src/js/**/*.js')
         .pipe(babel())
-        // .pipe(concat('build.js'))
+        .pipe(concat('build.js'))
         .pipe(gulp.dest('dist/js/')) //输出
-        // .pipe(uglify())  //压缩
-        // .pipe(rename({ suffix: '.min' })) //重命名
-        // .pipe(gulp.dest('dist/js/'))
+        .pipe(uglify())  //压缩
+        .pipe(rename({ suffix: '.min' })) //重命名
+        .pipe(gulp.dest('dist/js/'))
         .pipe(livereload())
         .pipe(connect.reload())
 })
@@ -138,4 +107,4 @@ gulp.task('ant_connect', function () {
 /**
  * 默认任务
  */
-gulp.task('default', gulp.parallel('js', 'browserifyLogin', 'browserifyWelfare', 'img', 'css', 'html', 'watch', 'ant_connect', ));
+gulp.task('default', gulp.parallel('js', 'img', 'css', 'html', 'watch', 'ant_connect', ));

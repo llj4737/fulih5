@@ -1,3 +1,6 @@
+// require('./flexible')
+// require('./welfare')
+
 let ajax = (options, cb) => {
     $.ajax({
         url: options.url,
@@ -13,8 +16,8 @@ let ajax = (options, cb) => {
         error (err) {
             console.log(err)
             if (err) {
-                alert('登录失败')
-                clear();
+                alert('失败')
+                // clear();
             }
         }
     })
@@ -33,9 +36,9 @@ function getCurUser () {
  * 入口函数
  */
 $(function(){
-    if (is_login()) {
-        return checkInSuccess();
-    }
+    // if (is_login()) {
+    //     return checkInSuccess();
+    // }
     let log_options = {type: 'post', url: '/api/user/login'};
     login_deal($('.login'), log_options, login)
     let reg_options = {type: 'post', url: '/api/user/register'};
@@ -59,9 +62,10 @@ function is_login () {
     return Object.keys(userData).length === 0 ? false : true;
 }
 function checkInSuccess() {
-    $('#home').css('display', 'none');
-    $('#welfare').css('display', 'block');
-    to_welfare(); // 进入福利中心
+    // $('#home').css('display', 'none');
+    // $('#welfare').css('display', 'block');
+    location.href = "/welfare.html"
+    // toWelfare(); // 进入福利中心
 }
 /**
  * 
@@ -119,6 +123,27 @@ function register(res) {
         clear();
     }
 }
+function throttle(fn, times) {
+    let first = true;
+    let timer = null;
+    return function () {
+        if (first) {
+            fn.apply(null, arguments);
+            return first = false;
+        }
+        if (timer) return;
+        timer = setTimeout(function () {
+            timer = null;
+            fn.apply(null, arguments);
+            clearTimeout(timer);
+        }, times);
+    }
+}
+
+module.exports = {
+    throttle,
+    userData
+};
 
 
 

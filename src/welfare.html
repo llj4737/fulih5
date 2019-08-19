@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="../css/build.min.css">
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_1351016_paax284o9go.css">
+    <script src="https://cdn.bootcss.com/zepto/1.1.2/zepto.js"></script>
+    <script src="./js/art-template.js"></script>
+    <script src="js/flexible.js"></script>
+
+    <script>calcRem(360)</script>
+    <title>福利中心</title>
+</head>
+
+<body>
+    <!-- 福利中心以及抽奖页面 -->
+    <div id="welfare" style="display: block">
+        <!-- 福利中心主页面 -->
+        <header>
+            <img id="back" src="./imgs/navigation_return_normal.png" alt="">
+            <h1>福利中心</h1>
+        </header>
+        <section>
+            <!-- 签到 -->
+            <div class="check-day">
+                <div class="days">
+                    <div class="days-continue">
+                        <h2>连续签到<span class="get-day">1</span>天</h2>
+                        <p>即可获取鱼蛋</p>
+                    </div>
+                    <div class="days-button">
+                        签到
+                    </div>
+                </div>
+                <div class="days-cal">
+                    <ul class="checkInEveryDay">
+                    </ul>
+                </div>
+            </div>
+            <!-- 任务和抽奖 -->
+            <div class="task">
+                <div class="my-task">
+                    <h2>我的任务</h2>
+                    <p><span>1</span>项奖励待领取</p>
+                </div>
+                <div class="lottery">
+                    <h2>转盘抽奖</h2>
+                    <p>点击抽奖</p>
+                </div>
+            </div>
+            <!-- 领奖列表 -->
+            <div class="receive-price">
+                <ul>
+                    <div id="list_task"></div>
+                    <li class="price-item">
+                        <div class="price-title">
+                            <img src="./imgs/广告.png" alt="">
+                            <div class="price-des">
+                                <h2>看广告拿好礼</h2>
+                                <p>本次奖励100金券100经验</p>
+                            </div>
+                        </div>
+                        <div class="to-see ad_task" data-id="1">
+                            去看看
+                        </div>
+                    </li>
+                </ul>
+                
+            </div>
+            <!-- 看广告领金券 -->
+            <div class="see-ad">
+                <h1>看广告, 领金券</h1>
+                <p>[广告收益补贴正版权益]</p>
+                <div class="task-line">
+                </div>
+                
+                <div class="reward-btn">
+                    <p>累计有效点击<span>3</span>次可领取<span>5</span>金券</p>
+                    <div class="receive">领取</div>
+                </div>
+                <div class="rules">
+                    <p>参与规则: </p>
+                    <p>1. 点击客户端任意广告进入页面, 并停留3秒以上算有效点击</p>
+                    <p>2. 同一位置广告30秒内只记录有效点击</p>
+                    <p>3. 累计点击在次日清零, 请及时领取</p>
+                </div>
+            </div>
+        </section>
+        <!-- 抽奖页面 -->
+        <div class="sweepstakes" style="display: none">
+            <!-- 抽奖 -->
+            <div class="sweepstakes-wrap" style="display: none">
+                <div class="bg-img">
+                    <h2>签到成功</h2>
+                    <div class="lottery-box">
+                    </div>
+                </div>
+                <img class="close-btn" src="./imgs/抽奖/global_close_normal1.png" alt="">
+            </div>
+            <!-- 领奖页面 -->
+            <div class="receive-reward" style="display: none">
+                <div class="receive-reward-bg"></div>
+                <p class="p1">恭喜你, 中奖了</p>
+                <p class="p2">获得<span>100</span>金券</p>
+                <div class="ok">确定</div>
+            </div>
+        </div>
+    </div>
+</body>
+<!-- 签到页面模板渲染 -->
+<script id="checkIn" type="text/html">
+    {{ each list }}
+    {{ set isChecked = $value.status == "0" }}
+        <li class="cal-item {{ isChecked ? '' : 'checked' }}">
+            <div class="arc">
+                <span>+{{ $value.reward.coupon }}</span>
+                <img src="./imgs/鱼蛋.png" alt="">
+            </div>
+            <p><i class="iconfont icon-ok1"></i>{{ weekendArr[$index] }}</p>
+        </li>
+    {{ /each }}
+</script>
+
+<!-- 任务列表页面渲染 -->
+<script id="tpl-user" type="text/html">
+    {{ each list_task }}
+    <li class="price-item">
+        <div class="price-title">
+            <img src="./imgs/{{imgList[$index]}}.png" alt="">
+            <div class="price-des">
+                <h2>{{$value.title}}</h2>
+                <p>{{$value.subtitle}}</p>
+            </div>
+        </div>
+        <div class="to-see" data-id="1">
+            去看看
+        </div>
+    </li>
+    {{ /each }}
+</script>
+
+<!-- 抽奖奖品渲染 -->
+<script id="lottery" type="text/html">
+    {{ each lotteryArr}}
+        {{ if $index < 4 }} 
+            {{ if $index == 0 }}
+                <div class="lottery-item active">
+                    <img src="./imgs/抽奖/金券图标.png" alt="">
+                    <p><span>{{ gift[$index].num }}</span>金券</p>
+                </div>
+            {{ else }}
+                <div class="lottery-item">
+                    <img src="./imgs/抽奖/金券图标.png" alt="">
+                    <p><span>{{ gift[$index].num }}</span>金券</p>
+                </div>
+            {{ /if }}
+        {{ else if $index == 4 }}
+            <div class="lottery-item lottery-btn"></div>
+        {{ else }}
+            <div class="lottery-item">
+                <img src="./imgs/抽奖/金券图标.png" alt="">
+                <p><span>{{ gift[$index-1].num }}</span>金券</p>
+            </div>
+        {{ /if }}
+    {{ /each }}
+</script>
+
+<!-- 广告任务进度条渲染 -->
+<script id="process" type="text/html">
+    <ul class="dots">
+        <li class="receive-dots" style="visibility: hidden;"></li>
+        {{ each timeLines }}
+        {{ set isComplete = times < $index + 1 }}
+                {{ if rewardDots.includes($index + 1) }}
+                    <li class="receive-dots money {{ isComplete ? '' : 'complete' }}">
+                        <p class="reward-amount">5</p>
+                        <p>金券</p>
+                    </li>
+                {{ else }}
+                    <li class="receive-dots {{ isComplete ? '' : 'complete' }}"></li>
+                {{ /if }}
+            
+        {{ /each }}
+    </ul>
+    <ul class="lines">
+            {{ each timeLines }}
+            {{ set isComplete = times < $index + 1 }}
+                <li class="receive-lines {{ isComplete ? '' : 'complete' }}"></li>
+            {{ /each }}
+    </ul>
+
+</script>
+<!-- 入口js -->
+<script src="js/index2.js"></script>
+
+</html>

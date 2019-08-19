@@ -58,6 +58,8 @@
 }
 .days-cal ul {
     display: flex;
+    height: 0.71rem;
+    box-sizing: border-box;
     justify-content: space-between;
     padding-bottom: 0.12rem;
     border-bottom: 1px solid #EFEFF0;
@@ -68,6 +70,12 @@
     box-sizing: border-box;
     text-align: center;
     /* border: 1px solid black; */
+}
+.cal-item.checked {
+    opacity: 0.47;
+}
+.cal-item.checked i{
+    display: inline-block;
 }
 .cal-item .arc{
     height: 0.42rem;
@@ -104,7 +112,7 @@
     /* border: 1px solid red; */
     display: flex;
     justify-content: space-between;
-    align-items: flex-end;
+    align-items: center;
     padding: 0 0.18rem;
 }
 .task > div {

@@ -73,6 +73,11 @@
     background-image: url(../imgs/抽奖/抽奖按钮.png);
 }
 
+.lottery-box > .lottery-item.lottery-btn.complete {
+    /* background-image: url('../imgs/抽奖/抽奖格子2.png'); */
+    filter: grayscale(100%);
+}
+
 
 .sweepstakes .close-btn {
     margin-top: 0.53rem;

@@ -1,22 +1,53 @@
 /** 福利中心 */
 let gifts = null;
-let task = null;
-let sigin_task = null;
-let list_task = null;
-let ad_task = null;
+let task = [];
+let sign_task = [];
+let list_task = [];
+let ad_task = [];
+let shouldClickMaxCount = 0;
+let { userData, throttle } = require('./login');
 
-function to_welfare() {
-    get_Task(order_deal_task);
-    click_lottery(); //点击抽奖
-    click_toSee_btn();  // 点击任务列表按钮
+
+
+console.log(userData)
+function ajax(options) {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            url: options.url,
+            type: options.type || 'GET',
+            data: JSON.stringify(options.data) || '',
+            dataType: 'json',
+            headers: options.headers || {
+                "Content-Type": "application/json;charset=utf-8"
+            },
+            success(result) {
+                resolve(result)
+            },
+            error(err) {
+                console.log(err)
+            }
+        })
+    })
 }
+function artTemplate(id, selector, data) {
+    var html = template(id, data);
+    var divResult = document.querySelector(selector);
+    //这是模板循环外面的div
+    divResult.innerHTML = html;
+}
+function init() {
+    getTask(orderDealTask);
+    clickLottery(); //点击抽奖
+
+}
+init();
 function okSignTask() { // 签到成功, 抽奖页面
     $('.sweepstakes').show();
-    
+
     getLotteryInfo();
-    lottery_btn();
+
 }
-function lottery_btn() {  // 抽奖按钮
+function lotteryBtn() {  // 抽奖按钮
     $('.lottery-btn').on('click', function () {
         let index = 0;
         let quan = 0;
@@ -27,7 +58,7 @@ function lottery_btn() {  // 抽奖按钮
             if (index > order.length - 1) {
                 index = 0;
                 if (++quan === 2) {
-                    clearInterval(timer); 
+                    clearInterval(timer);
                     sendRewardOk(index);
                 }
             }
@@ -39,75 +70,79 @@ function lottery_btn() {  // 抽奖按钮
         $('.days-button').addClass('complete_checkIn').text('已签到');
     })
 }
-function sendRewardOk (index) {
+// 抽奖成功, 发送成功请求, 展示抽奖结果
+function sendRewardOk(index) {
     // let cur_gift = gift[index];
     let id = gifts._id;
-    let giftid = gifts.gift[index].id;
+    let giftId = gifts.gift[index].id;
     let status = 1;
-    $.ajax({
-        type: 'post',
-        url: '/api/task/finishLottery',
-        data: JSON.stringify({id, giftid, status}),
-        headers: {
-            "Content-Type": "application/json;charset=utf-8"
-        },
-        success (res) {
-            if (res.status == 200) {
-                show_reward();
-            }
+    console.log({ id, giftId, status })
+    let options = { type: 'post', url: '/api/task/finishLottery', data: { id, giftId, status } };
+    ajax(options).then(res => {
+        if (res.status == 200) {
+            console.log(res)
+            showReward();
         }
     })
 }
-function show_reward() {   // 显示获得的抽奖奖励
+function getReward() {
+    return localStorage.getItem('reward') || '';
+}
+function setReward(value) {
+    localStorage.setItem('reward', value);
+}
+function showReward() {   // 显示获得的抽奖奖励
     let cur_reward = $('.lottery-item.active').find('span').text();
+    setReward(cur_reward);
     $('.receive-reward').show().find('span').text(cur_reward);
     $('.sweepstakes-wrap').hide();
     $('.receive-reward > .ok').click(function () {
+        $('.receive-reward').hide();
         $('.sweepstakes').hide();
         $('.days-button').addClass('complete_checkIn').text('已签到');
-
+        $('.lottery > p').text(getReward() + '金币')
     })
 }
+
 // 点击抽奖
-function click_lottery() {
+function clickLottery() {
     $('.lottery > p').click(function () {
         okSignTask();
     })
 }
+
 // 任务列表按钮
-function click_toSee_btn() {
-    let $to_see = $('.to-see');
-    for (let i = 0; i < $to_see.length - 1; i++) {
+function clickToSeeBtn() {
+    var count = 0;
+    let $to_see = $('#list_task .to-see');
+    for (let i = 0; i < $to_see.length; i++) {
         $($to_see[i]).click(function () {
             console.log(list_task[i])
             let that = $(this);
             let { status, taskId, taskType, condition } = list_task[i];
-            if (status == 3) return;
-            condition.taskNum >= 3 && (condition.taskNum = 2);
-            status = (+status + 2 / condition.taskNum) + "";
-            list_task[i].status = status;
-            $.ajax({
-                type: 'post',
-                url: '/api/task/finishTask',
-                data: JSON.stringify({ status, taskId, username: userData.username }),
-                headers: {
-                    "Content-Type": 'application/json;charset=utf-8'
-                },
-                dataType: 'json',
-                success(res) {
-                    if (res.status == 200) {
-                        btn_statusChange(status, that);
-                        // if (status == 3) {
-                        //     let count = $('.task .my-task span').text();
-                        //     count = -- count < 0 ? 0 : count;
-                        //     $('.task .my-task span').text(count);
-                        // }
-                        if (status == 2) {
-                            setWillReceiveCountDesc();
-                        }
-                    }
-                }
-            })
+            if (status == 2) {
+                let options = { type: 'post', url: '/api/task/finishTask', data: { status: '3', taskId, username: userData.username } };
+                ajax(options).then(res => {
+                    console.log(res)
+                    list_task[i].status = '3';
+                    btnStatusChange('3', that);
+                    setWillReceiveCountDesc()
+                    console.log(list_task[i])
+                })
+                return;
+            };
+            if (++count == condition.taskNum) {
+                let options = { type: 'post', url: '/api/task/finishTask', data: { status: '2', taskId, username: userData.username } };
+                ajax(options).then(res => {
+                    console.log(res)
+                    list_task[i].status = '2';
+                    btnStatusChange('2', that);
+                    count = 0;
+                    setWillReceiveCountAsc()
+                    console.log(list_task[i])
+                })
+            }
+
         })
     }
 }
@@ -122,64 +157,64 @@ function setWillReceiveCountDesc() {
 }
 
 function getLotteryInfo() {   // 获取抽奖信息
-    $.ajax({
-        type: 'get',
-        url: '/api/task/lottery?username=' + userData.username,
-        dataType: 'json',
-        success(res) {
-            let { status, result } = res;
-            if (status === 200) {
-                gifts = result;
-                if (gifts.status == 1) {
-                    return show_reward();
-                    
-                }
-                let gift = result.gift;
-                console.log(gifts)
-                $('.sweepstakes-wrap').show();
-                render_lotteryTray(gift);
+    let options = { url: '/api/task/lottery?username=' + userData.username };
+    ajax(options).then(res => {
+        if (res.status == 200) {
+            gifts = res.result;
+            console.log(gifts)
+            $('.sweepstakes-wrap').show();
+            renderLotteryTray(gifts.gift);
+            if (gifts.status == 1) {
+                $('.lottery-item.lottery-btn').addClass('complete');
+                $('.lottery-btn').unbind('click');
             }
+            lotteryBtn();
         }
     })
 }
-function render_lotteryTray(gift) {  // 渲染抽奖列表
-    let lottery_arr = Array.from($('.lottery-item'));
-    lottery_arr.splice(4, 1);
-    for (let i = 0; i < lottery_arr.length; i++) {
-        if (i > gift.length - 1) continue;
-        lottery_arr[i].lastElementChild.firstElementChild.innerHTML = `${gift[i].num}`;
-    }
+function renderLotteryTray(gift) {  // 渲染抽奖列表
+    let lotteryArr = new Array(9);
+    artTemplate('lottery', '.lottery-box', { lotteryArr, gift })
 }
 
-function get_Task(cb) {  // 获取任务
-    $.ajax({
-        type: 'get',
-        url: '/api/task/getUserTask?username=' + userData.username,
-        headers: {
-            "Content-Type": "application/json;charset=utf-8"
-        },
-        dataType: 'json',
-        success(res) {
-            if (res.status === 200) {
-                task = res.result;
-                task.sort(function (a, b) {
-                    return a.taskId - b.taskId;
-                })
-                let sign_index = task.findIndex(t => t.taskId == 11);
-                sign_task = task[sign_index];  // obj
-                list_task = task.slice(sign_index + 1, task.length - 1);
-                ad_task = task.slice(-2);
-                console.log(task)
-                pending_task(task);
-                cb(task, sign_index);
-            }
+function getTask(cb) {  // 获取任务
+    let options = { url: '/api/task/getUserTask?username=' + userData.username };
+    ajax(options).then(res => {
+        if (res.status == 200) {
+            task = res.result;
+            devideTask(task);
+            console.log(sign_task, list_task, ad_task)
+            pendingTask(task);
+            cb();
         }
     })
 }
-function order_deal_task(task) {
-    deal_signTask(sign_task);
-    deal_listTask(list_task);
-    deal_adTask(ad_task);
+function devideTask(task) {
+    let [curSignTask, curListTask, curAdTask] = [[], [], []];
+    for (var i = 0; i < task.length; i++) {
+        let taskId = task[i].taskId;
+        if (taskId == 11) {
+            curSignTask.push(task[i]);
+        } else if (taskId == 16 || taskId == 17) {
+            curAdTask.push(task[i]);
+        } else {
+            curListTask.push(task[i]);
+        }
+    }
+    [sign_task, list_task, ad_task] = [curSignTask, curListTask, curAdTask];
+}
+function renderListTemplate() {
+    let imgList = ['广告', '更新', '免费专区复制', '免费专区', '阅读计划'];
+    artTemplate('tpl-user', '#list_task', { list_task, imgList });
+    clickToSeeBtn();  // 点击任务列表按钮
+    dealListTask(list_task);
+}
+function orderDealTask() {
+    renderListTemplate();  // 渲染列表任务模板
+    dealSignTask(sign_task);  // 处理签到任务
+    dealAdTask(ad_task);  // 处理广告任务
+    dealProcess();  // 处理广告任务进度条
+    rewardBtn(ad_task);
 }
 function setClickCount(count) {
     localStorage.setItem('clickCount', count);
@@ -187,228 +222,158 @@ function setClickCount(count) {
 function getClickCount() {
     return localStorage.getItem('clickCount') ? localStorage.getItem('clickCount') : 1;
 }
-function deal_adTask(ad_task) {
+function dealAdTask(ad_task) {
     let task = ad_task;
-    // let status1 = ad_task.reduce((prev, cur) => cur['status'] == 1 ? ++prev : prev, 0);
-    // if (status1 == 0) {
-    //     $('.to-see.ad_task').text('已完成').addClass('complete');
-    //     return;
-    // }
     let clickCount = 0;
+    shouldClickMaxCount = Math.max.apply(null, ad_task.map(v => v.condition.taskNum))
     $('.to-see.ad_task').click(function () {
-        
-        if ((clickCount = getClickCount()) > 6) return;
+        if ((clickCount = getClickCount()) > shouldClickMaxCount) return;
         setClickCount((+clickCount) + 1);
-        ad_process(clickCount);  // 显示完成的进度条
+        adProcess(clickCount);  // 显示完成的进度条
         let is_complete = task.some(t => t.condition.taskNum == clickCount);
         if (is_complete) {
-            let { status, taskId } = task[task.findIndex(t => t.condition.taskNum == clickCount)];
-            $.ajax({
-                type: 'post',
-                url: '/api/task/finishTask',
-                data: JSON.stringify({ status: "2", username: userData.username, taskId }),
-                headers: {
-                    "Content-Type": "application/json;charset=utf-8"
-                },
-                success(res) {
-                    // console.log(res);
-                    if (res.status == 200) {
-                        // if (clickCount == 6 || clickCount == 3) {
-                        //     $that.text('已完成').addClass('complete');
-                        // }
-                        ad_task = ad_task.map(v => {
-                            (v.condition.taskNum == clickCount) && (v.status = "2");
-                            return v;
-                        });
-                        deal_process(ad_task);
-                        reward_btn(ad_task);
-                        let pending = $('.task .my-task span').text();
-                        $('.task .my-task span').text(++pending);
-                    }
+            let curAdTask = task[task.findIndex(t => t.condition.taskNum == clickCount)]
+            let { status, taskId } = curAdTask;
+            let options = { type: 'post', url: '/api/task/finishTask', data: { status: "2", username: userData.username, taskId } };
+            ajax(options).then(res => {
+                if (res.status == 200) {
+                    // ad_task = ad_task.map(v => {
+                    //     (v.condition.taskNum == clickCount) && (v.status = "2");
+                    //     return v;
+                    // });
+                    curAdTask['status'] = '2';
+                    dealProcess(ad_task);
+                    rewardBtn(ad_task);
+                    setWillReceiveCountAsc();
                 }
             })
         }
 
     });
-
-    deal_process();
 }
-
-function deal_process() {
+//处理进度条
+function dealProcess() {
     let times = ad_task.reduce((prev, cur) => cur['status'] == 2 ? ++prev : prev, 0);
     let status3 = ad_task.reduce((prev, cur) => cur['status'] == 3 ? ++prev : prev, 0);
     let count = times * 3;
-    if (count == 6 || getClickCount() - 1 == 6) {
+
+    conditions();
+    if (count == shouldClickMaxCount || getClickCount() - 1 == shouldClickMaxCount) {
         $('.to-see.ad_task').text('已完成').addClass('complete');
     }
     if (status3 == 2) {
         $('.reward-btn .receive').removeClass('active').text('已领取');
-        
     }
     let status1 = ad_task.reduce((prev, cur) => cur['status'] == 1 ? ++prev : prev, 0);
     if (status1 == 0) {
         $('.to-see.ad_task').text('已完成').addClass('complete');
         $('.to-see.ad_task').unbind('click')
     }
-    // if (status1 == 0) {
-    //     $('.to-see.ad_task').text('已完成').addClass('complete');
-    //     $('.to-see.ad_task').unbind('click')
-    // }
-    
+
     let clickCount = getClickCount() - 1;
     if (clickCount < count) {
         setClickCount(count + 1);
     }
     if (times >= 1) {
         $('.reward-btn .receive').addClass('active');
-        reward_btn(ad_task);
     }
-    ad_process(getClickCount() - 1)
-}
-function ad_process(times) { //进度
-    if (times < 0) return; 
-    let $dots = $('.task-line .receive-dots').slice(1);
-    let $lines = $('.task-line .receive-lines');
-    for (let i = 0; i < $dots.length; i++) {
-        if (i < times) {
-            $($dots[i]).addClass('complete');
-            $($lines[i]).addClass('complete');
-        } else {
-            $($dots[i]).removeClass('complete');
-            $($lines[i]).removeClass('complete');
-        }
 
-    }
-    // if (times >= 3) {
-    //     $('.reward-btn .receive').addClass('active');
-    //     reward_btn(ad_task);
-    // }
+    adProcess(getClickCount() - 1)
 }
-function reward_btn(ad_task) { // 领奖按钮
+function conditions() {
+    let i = ad_task.findIndex(v => v.condition.taskNum == shouldClickMaxCount);
+    $('.reward-btn span').eq(0).text(ad_task[i].condition.taskNum);
+    $('.reward-btn span').eq(1).text(ad_task[i].reward.coupon);
+}
+function adProcess(times) { //渲染进度条
+    if (times < 0) return;
+    let timeLines = new Array(shouldClickMaxCount);
+    let rewardDots = ad_task.map(v => v.condition.taskNum);
+    console.log(rewardDots)
+    artTemplate('process', '.task-line', { timeLines, times, rewardDots })
+}
+function rewardBtn(ad_task) { // 领奖按钮
     let count = ad_task.reduce((prev, cur) => cur.status == 2 ? ++prev : prev, 0);
-    let count1 = ad_task.reduce((prev, cur) => cur.status == 1 ? ++prev : prev, 0);
     console.log(ad_task, count)
-    console.log('count1', count1)
-    // if (count == 0) {
-    //     $('.reward-btn .receive').removeClass('active');
-    //     ad_process(0)
-    //     return;
-    // }
     if (count > 0) {
         $('.reward-btn .receive').addClass('active');
     }
-    if (count1 == 0) {
-        console.log(11111111111111111111111111)
-        $('.to-see.ad_task').text('已完成').addClass('complete');
-        $('.to-see.ad_task').unbind('click')
-    }
-    // if (count3 == 2) {
-    //     $('.to-see.ad_task').text('已完成').addClass('complete');
-    //     $('.to-see.ad_task').unbind('click')
-    // }
-    $('.reward-btn .receive').click(function () {
-        ad_task = ad_task.filter(v => v.status == 2);
-        if (--count < 0) return;
-        
-        let cur = ad_task[count];
-        let { taskId } = cur;
-        console.log(taskId)
-        $.ajax({
-            type: 'post',
-            url: '/api/task/finishTask',
-            data: JSON.stringify({ username: userData.username, taskId, status: '3' }),
-            headers: {
-                "Content-Type": 'application/json;charset=utf-8'
-            },
-            success(res) {
-
+    $('.reward-btn .receive').unbind('click')
+    $('.reward-btn .receive').click(throttle(function(){
+            console.log(111)
+            ad_task = ad_task.filter(v => v.status == 2);
+            if (--count < 0) return;
+            let cur = ad_task[count];
+            let { taskId } = cur;
+            console.log(taskId)
+            let options = { type: 'post', url: '/api/task/finishTask', data: { username: userData.username, taskId, status: '3' } };
+            ajax(options).then(res => {
                 if (res.status == 200) {
                     console.log(111)
                     setClickCount(getClickCount() - 3);
                     if (count == 0) {
                         $('.reward-btn .receive').removeClass('active').text('已领取');
                     }
-                    ad_process(count * 3)
+                    console.log(count)
+                    adProcess(count * 3)
                     setWillReceiveCountDesc();
                     cur.status = '3';
-                    let count3 = ad_task.reduce((prev, cur) => cur.status == 3 ? ++prev : prev, 0);
                     console.log(ad_task, 'ad_task')
                 }
-            }
-        })
-
-    })
+            })
+    }, 1000))
 }
 
 
-// function getClickCount
 //待领取
-function pending_task(task) {
+function pendingTask(task) {
     let pending = task.reduce((prev, cur) => {
         return cur.status == 2 ? ++prev : prev;
     }, 0);
     $('.task .my-task span').text(pending);
 }
-function deal_signTask(sign_task) {  // 处理签到任务
-    let item = sign_task;
+function dealSignTask(sign_task) {  // 处理签到任务
+    let item = sign_task[0];
     if (item.taskId == 11 && item.taskType === "SIGN_TASK") {  // 签到任务
         let status = item.status;
         if (status == 1) { // 未完成未领取, 自动领取
-            $.ajax({
-                type: 'post',
-                url: '/api/task/finishTask',
-                dataType: 'json',
-                headers: {
-                    "Content-Type": "application/json;charset=utf-8"
-                },
-                data: JSON.stringify({ status: "3", username: userData.username, taskId: item.taskId }),
-                success(res) {
-                    console.log(res)
-                    if (res.status === 200) {
-                        okSignTask();  // 领取成功进入抽奖页面
-                        get_Task(weekend);
-                    }
+            let options = { type: 'post', url: '/api/task/finishTask', data: { status: "3", username: userData.username, taskId: item.taskId } };
+            ajax(options).then(res => {
+                if (res.status == 200) {
+                    okSignTask();  // 领取成功进入抽奖页面
+                    getTask(weekend);
+                    // weekend();
                 }
             })
         }
         else {
             $('.days-button').addClass('complete_checkIn').text('已签到');
-            get_Task(weekend);
+            getTask(weekend);
+
+            // weekend();
         }
     }
-    // setTimeout(function () {
-
-    // }, 500)
 }
-function weekend(task, index) {
-    // console.log(task)
+function weekend() {
     // 周一到周日的签到任务
-    let list = task[index].list.filter(item => item.day !== 8).sort((a, b) => a.day - b.day);
-    let [list_status, list_reward] = [list.map(v => v.status), list.map(v => v.reward.coupon)];
-    let days_count = 0;
-    $('.cal-item').each(function (i) {
-        // $(this).find('.arc > span').text('+' + list_reward[i]);
-        let opacity47 = list_status[i] == 1;
-        if (opacity47) {
-            days_count++;
-            $(this).find('.arc').css('opacity', '0.47').parent().find('.iconfont').show();
-        }
-    });
-    days_continue(days_count);
-
+    let list = sign_task[0].list;
+    let daysCount = list.reduce((prev, { status }) => status == 0 ? prev : ++prev, 0);
+    let weekendArr = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
+    artTemplate('checkIn', '.checkInEveryDay', { list, weekendArr });
+    daysContinue(daysCount);
 }
-function deal_listTask(task) {  // 处理列表任务
-    let status_arr = task.map(v => v.status);
-    let $btn = $('.price-item .to-see');
-    for (let i = 0; i < $btn.length - 1; i++) {
+function dealListTask(task) {  // 处理列表任务
+    let statusArr = task.map(v => v.status);
+    let $btn = $('#list_task .to-see');
+    for (let i = 0; i < $btn.length; i++) {
         let $cur = $($btn[i]);
         let dataId = $cur.attr('data-id');
-        if (dataId != status_arr[i]) {
-            btn_statusChange(status_arr[i], $cur);
+        if (dataId != statusArr[i]) {
+            btnStatusChange(statusArr[i], $cur);
         }
     }
 }
-function btn_statusChange(status, $cur) {
+function btnStatusChange(status, $cur) {
     if (status == 2) {
         $cur.text('领取').addClass('receive');
     } else if (status == 3) {
@@ -417,9 +382,14 @@ function btn_statusChange(status, $cur) {
 }
 
 // 连续签到多少天
-function days_continue(count) {
+function daysContinue(count) {
     $('.days-continue h2 span').text(count);
 }
+
+
+$('#welfare #back').click(function () {
+    location.href = "/"
+})
 
 
 
